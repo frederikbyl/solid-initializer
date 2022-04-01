@@ -1,0 +1,23 @@
+<h1>Authorization</h1>
+<h5>Your webId: 
+  {{session.info.webId}}</h5>
+
+<label for="name">Target WebId </label>
+<input id="name" [(ngModel)]="targetWebId" placeholder="targetWebId">
+
+<label for="name">URI</label>
+<input id="name" [(ngModel)]="uri" placeholder="uri">
+
+<form [formGroup]="form" (ngSubmit)="authorize()" novalidate>
+    <div *ngFor="let country of authorizations; let i=index">
+      <input type="checkbox" formArrayName="selectedAuthorizations" [value]="country.value" (change)="onCheckboxChange($event)" 
+      />
+      {{ country.name}}
+    </div>
+  </form>
+
+
+<button (click)="authorize()">Authorize</button>
+
+<h2 *ngIf="error!==''">{{error}}</h2>
+<h2 *ngIf="success!==''">{{success}}</h2>

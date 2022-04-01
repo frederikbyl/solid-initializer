@@ -18,8 +18,12 @@
     "@angular/platform-browser": "~13.2.0",
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
+    "@inrupt/solid-client": "^1.21.0",
+    "@inrupt/solid-client-authn-browser": "^1.11.7",
+    "@inrupt/vocab-common-rdf": "^1.0.3",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
+    "uuid": "^8.3.2",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

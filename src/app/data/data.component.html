@@ -1,0 +1,11 @@
+<h1>Data Generator</h1>
+<input id="name"    [(ngModel)]="name" placeholder="name">
+<input id="city"    [(ngModel)]="city" placeholder="city">
+<input id="street"  [(ngModel)]="street" placeholder="street">
+<input id="houseNumber"  [(ngModel)]="houseNumber" placeholder="houseNumber">
+<input id="gsm"  [(ngModel)]="gsm" placeholder="gsm">
+
+<input id="dataLocation"  [(ngModel)]="dataLocation" placeholder="dataLocation">
+<button (click)="save()">Save Custom</button>
+<button (click)="saveAsVCARD()">Save as schema.org</button>
+<button (click)="saveAsSchemaOrg()">Save as VCARD</button>
