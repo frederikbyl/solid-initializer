@@ -59,7 +59,6 @@ export class DataComponent implements OnInit {
   }
 
   saveAsVCARD() {
-    //TODO: implement by Bram. I already imported the VCARD module from RDF lib.
     console.log("Saving as vcard");
     console.log(this.name);
     console.log(this.city);
