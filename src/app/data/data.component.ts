@@ -78,37 +78,37 @@ export class DataComponent implements OnInit {
       console.log("Data created");
       console.log(uuid);
     });
-}
-
-saveAsSchemaOrg() {
-  //TODO: implement by Bram. I don't think there exists a module like vcard for this. You can write it as strings
-  console.log("Saving as schema.org");
-  const uuid = v4();
-  let addressDataset = createSolidDataset();
-
-  const addressThing = buildThing(createThing({ name: uuid }))
-    .addUrl(RDF.type, SCHEMA_INRUPT.Person)
-    .addStringNoLocale(SCHEMA_INRUPT.name, this.name)
-    .addStringNoLocale(SCHEMA_INRUPT.streetAddress, this.street + " " + this.houseNumber)
-    .addStringNoLocale(SCHEMA_INRUPT.addressLocality, this.city)
-    .addStringNoLocale("http://schema.org/telephone", this.gsm)
-    .build();
-  addressDataset = setThing(addressDataset, addressThing);
-
-  saveSolidDatasetAt(this.getRootName() + this.dataLocation + uuid, addressDataset, {
-    fetch: this.session.fetch
-  }).then((result) => {
-    console.log("Data created");
-    console.log(uuid);
-  });
-
-}
-
-getRootName() {
-  if (getDefaultSession().info.isLoggedIn) {
-    return getDefaultSession().info.webId!.replace('profile/card#me', '');
-  } else {
-    throw new Error("Not logged in");
   }
-}
+
+  // save as schema.org person, the inrupt version of schema.org implements a small subset of the schema.org spec
+  saveAsSchemaOrg() {
+    console.log("Saving as schema.org");
+    const uuid = v4();
+    let addressDataset = createSolidDataset();
+
+    const addressThing = buildThing(createThing({ name: uuid }))
+      .addUrl(RDF.type, SCHEMA_INRUPT.Person)
+      .addStringNoLocale(SCHEMA_INRUPT.name, this.name)
+      .addStringNoLocale(SCHEMA_INRUPT.streetAddress, this.street + " " + this.houseNumber)
+      .addStringNoLocale(SCHEMA_INRUPT.addressLocality, this.city)
+      .addStringNoLocale("http://schema.org/telephone", this.gsm)
+      .build();
+    addressDataset = setThing(addressDataset, addressThing);
+
+    saveSolidDatasetAt(this.getRootName() + this.dataLocation + uuid, addressDataset, {
+      fetch: this.session.fetch
+    }).then((result) => {
+      console.log("Data created");
+      console.log(uuid);
+    });
+
+  }
+
+  getRootName() {
+    if (getDefaultSession().info.isLoggedIn) {
+      return getDefaultSession().info.webId!.replace('profile/card#me', '');
+    } else {
+      throw new Error("Not logged in");
+    }
+  }
 }
