@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { buildThing, createSolidDataset, createThing, saveSolidDatasetAt, setThing } from '@inrupt/solid-client';
 import { getDefaultSession } from '@inrupt/solid-client-authn-browser';
-import { RDF, VCARD } from '@inrupt/vocab-common-rdf';
+import { RDF, VCARD, SCHEMA_INRUPT } from '@inrupt/vocab-common-rdf';
 import { v4 } from 'uuid';
 
 @Component({
@@ -12,19 +12,19 @@ import { v4 } from 'uuid';
 })
 export class DataComponent implements OnInit {
   session: any;
-  name='';
-  city='';
-  street='';
-  houseNumber='';
-  gsm='';
-  dataLocation='private/address/'
+  name = '';
+  city = '';
+  street = '';
+  houseNumber = '';
+  gsm = '';
+  dataLocation = 'private/address/'
 
   constructor(private router: Router) { }
 
   ngOnInit(): void {
     if (getDefaultSession().info.isLoggedIn) {
       this.session = getDefaultSession();
-   
+
     } else {
       this.router.navigate(['/login']);
     }
@@ -42,35 +42,71 @@ export class DataComponent implements OnInit {
 
     const addressThing = buildThing(createThing({ name: myuuid }))
       .addUrl(RDF.type, "http://vito.be/contactGegevens")
-      .addStringNoLocale("http://vito.be/naam",this.name)
-      .addStringNoLocale("http://vito.be/straat",this.street)
-      .addStringNoLocale("http://vito.be/huisNummer",this.houseNumber)
-      .addStringNoLocale("http://vito.be/gsm",this.gsm)
+      .addStringNoLocale("http://vito.be/naam", this.name)
+      .addStringNoLocale("http://vito.be/straat", this.street)
+      .addStringNoLocale("http://vito.be/huisNummer", this.houseNumber)
+      .addStringNoLocale("http://vito.be/gsm", this.gsm)
       .build();
-      addressDataset = setThing(addressDataset, addressThing);
-      
+    addressDataset = setThing(addressDataset, addressThing);
 
     saveSolidDatasetAt(this.getRootName() + this.dataLocation + myuuid, addressDataset, {
       fetch: this.session.fetch
     }).then((result) => {
       console.log("Data created");
-    
     });
 
 
   }
 
   saveAsVCARD() {
-    //TODO: implement by Bram. I already imported the VCARD module from RDF lib.
+    console.log("Saving as vcard");
+    const uuid = v4();
+    let addressDataset = createSolidDataset();
+
+    const addressThing = buildThing(createThing({ name: uuid }))
+      .addUrl(RDF.type, VCARD.Individual)
+      .addStringNoLocale(VCARD.fn, this.name)
+      .addStringNoLocale(VCARD.adr, this.street + " " + this.houseNumber)
+      .addStringNoLocale(VCARD.locality, this.city)
+      .addStringNoLocale(VCARD.tel, this.gsm)
+      .build();
+    addressDataset = setThing(addressDataset, addressThing);
+
+    saveSolidDatasetAt(this.getRootName() + this.dataLocation + uuid, addressDataset, {
+      fetch: this.session.fetch
+    }).then((result) => {
+      console.log("Data created");
+      console.log(uuid);
+    });
   }
 
+  // save as schema.org person, the inrupt version of schema.org implements a small subset of the schema.org spec
   saveAsSchemaOrg() {
-    //TODO: implement by Bram. I don't think there exists a module like vcard for this. You can write it as strings
+    console.log("Saving as schema.org");
+    const uuid = v4();
+    let addressDataset = createSolidDataset();
+
+    const addressThing = buildThing(createThing({ name: uuid }))
+      .addUrl(RDF.type, SCHEMA_INRUPT.Person)
+      .addStringNoLocale(SCHEMA_INRUPT.name, this.name)
+      .addStringNoLocale(SCHEMA_INRUPT.streetAddress, this.street + " " + this.houseNumber)
+      .addStringNoLocale(SCHEMA_INRUPT.addressLocality, this.city)
+      .addStringNoLocale("http://schema.org/telephone", this.gsm)
+      .build();
+    addressDataset = setThing(addressDataset, addressThing);
+
+    saveSolidDatasetAt(this.getRootName() + this.dataLocation + uuid, addressDataset, {
+      fetch: this.session.fetch
+    }).then((result) => {
+      console.log("Data created");
+      console.log(uuid);
+    });
+
   }
 
   getRootName() {
-    if(getDefaultSession().info.isLoggedIn) {
-      return getDefaultSession().info.webId!.replace('profile/card#me','');
+    if (getDefaultSession().info.isLoggedIn) {
+      return getDefaultSession().info.webId!.replace('profile/card#me', '');
     } else {
       throw new Error("Not logged in");
     }
