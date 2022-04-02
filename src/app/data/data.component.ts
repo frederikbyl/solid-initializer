@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { buildThing, createSolidDataset, createThing, saveSolidDatasetAt, setThing } from '@inrupt/solid-client';
 import { getDefaultSession } from '@inrupt/solid-client-authn-browser';
-import { RDF, VCARD } from '@inrupt/vocab-common-rdf';
+import { RDF, VCARD, SCHEMA_INRUPT } from '@inrupt/vocab-common-rdf';
 import { v4 } from 'uuid';
 
 @Component({
@@ -60,12 +60,6 @@ export class DataComponent implements OnInit {
 
   saveAsVCARD() {
     console.log("Saving as vcard");
-    console.log(this.name);
-    console.log(this.city);
-    console.log(this.street);
-    console.log(this.houseNumber);
-    console.log(this.gsm);
-    console.log(this.dataLocation);
     const uuid = v4();
     let addressDataset = createSolidDataset();
 
@@ -88,6 +82,26 @@ export class DataComponent implements OnInit {
 
 saveAsSchemaOrg() {
   //TODO: implement by Bram. I don't think there exists a module like vcard for this. You can write it as strings
+  console.log("Saving as schema.org");
+  const uuid = v4();
+  let addressDataset = createSolidDataset();
+
+  const addressThing = buildThing(createThing({ name: uuid }))
+    .addUrl(RDF.type, SCHEMA_INRUPT.Person)
+    .addStringNoLocale(SCHEMA_INRUPT.name, this.name)
+    .addStringNoLocale(SCHEMA_INRUPT.streetAddress, this.street + " " + this.houseNumber)
+    .addStringNoLocale(SCHEMA_INRUPT.addressLocality, this.city)
+    .addStringNoLocale("http://schema.org/telephone", this.gsm)
+    .build();
+  addressDataset = setThing(addressDataset, addressThing);
+
+  saveSolidDatasetAt(this.getRootName() + this.dataLocation + uuid, addressDataset, {
+    fetch: this.session.fetch
+  }).then((result) => {
+    console.log("Data created");
+    console.log(uuid);
+  });
+
 }
 
 getRootName() {
