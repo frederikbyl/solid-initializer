@@ -40,7 +40,7 @@ export class DataComponent implements OnInit {
     let addressDataset = createSolidDataset();
     let myuuid = v4();
 
-    const addressThing = buildThing(createThing({ name: myuuid }))
+    const addressThing = buildThing(createThing({ name: "me" }))
       .addUrl(RDF.type, "http://vito.be/contactGegevens")
       .addStringNoLocale("http://vito.be/naam", this.name)
       .addStringNoLocale("http://vito.be/straat", this.street)
@@ -63,7 +63,7 @@ export class DataComponent implements OnInit {
     const uuid = v4();
     let addressDataset = createSolidDataset();
 
-    const addressThing = buildThing(createThing({ name: uuid }))
+    const addressThing = buildThing(createThing({ name: "me" }))
       .addUrl(RDF.type, VCARD.Individual)
       .addStringNoLocale(VCARD.fn, this.name)
       .addStringNoLocale(VCARD.adr, this.street + " " + this.houseNumber)
@@ -86,7 +86,7 @@ export class DataComponent implements OnInit {
     const uuid = v4();
     let addressDataset = createSolidDataset();
 
-    const addressThing = buildThing(createThing({ name: uuid }))
+    const addressThing = buildThing(createThing({ name: "me" }))
       .addUrl(RDF.type, SCHEMA_INRUPT.Person)
       .addStringNoLocale(SCHEMA_INRUPT.name, this.name)
       .addStringNoLocale(SCHEMA_INRUPT.streetAddress, this.street + " " + this.houseNumber)
