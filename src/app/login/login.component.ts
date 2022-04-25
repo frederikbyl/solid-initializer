@@ -9,7 +9,7 @@ import { handleIncomingRedirect, getDefaultSession, login } from '@inrupt/solid-
 })
 export class LoginComponent implements OnInit {
 
-  idpServer = 'https://server.solid-demo.int.vito.be/'
+  idpServer = 'http://localhost:3000/'
   constructor(private router: Router ) { }
 
   async ngOnInit(): Promise<void> {

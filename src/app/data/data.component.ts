@@ -17,7 +17,7 @@ export class DataComponent implements OnInit {
   street = '';
   houseNumber = '';
   gsm = '';
-  dataLocation = 'private/address/'
+  dataLocation = 'private/children/'
 
   constructor(private router: Router) { }
 
@@ -53,6 +53,7 @@ export class DataComponent implements OnInit {
       fetch: this.session.fetch
     }).then((result) => {
       console.log("Data created");
+      alert(`Data saved at ${this.getRootName() + this.dataLocation + myuuid}`);
     });
 
 
@@ -77,6 +78,7 @@ export class DataComponent implements OnInit {
     }).then((result) => {
       console.log("Data created");
       console.log(uuid);
+      alert(`Data saved as vcard at ${this.getRootName() + this.dataLocation + uuid}`);
     });
   }
 
@@ -100,6 +102,7 @@ export class DataComponent implements OnInit {
     }).then((result) => {
       console.log("Data created");
       console.log(uuid);
+      alert(`Data saved as schema.org at ${this.getRootName() + this.dataLocation + uuid}`);
     });
 
   }
